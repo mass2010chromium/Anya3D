@@ -1,4 +1,4 @@
-from utils import *
+from .utils import *
 
 """
 An anya2 search node. These guys are allowed to be horizontal too.

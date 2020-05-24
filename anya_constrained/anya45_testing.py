@@ -1,6 +1,6 @@
 from anya2_vis import *
 from anya2_node import *
-from anya2_search import *
+from anya_constrained import *
 from utils import *
 
 import sys
@@ -160,7 +160,7 @@ def test_expand_start():
         draw_node(node, color=color)
     show(interactive=True)
 
-def test_random(interactive=True):
+def test_random(interactive=True, method=Anya45Search):
     grid = makeBorderedGrid((0, 0), (102, 102))
     occupied = grid.occupied
 
@@ -176,7 +176,7 @@ def test_random(interactive=True):
 
     goal = (random.randrange(1, 101), random.randrange(1, 101))
     start = (random.randrange(1, 101), random.randrange(1, 101))
-    anyaSearch = Anya2Search()
+    anyaSearch = method()
     stime = time.time()
     anyaSearch.search_start(start, goal, grid)
 
@@ -189,8 +189,8 @@ def test_random(interactive=True):
     dt = time.time() - stime
     if interactive:
         print(f"Time: {dt}")
-    if interactive and not anyaSearch.has_path():
-    #if not anyaSearch.has_path():
+    #if interactive and not anyaSearch.has_path():
+    if not anyaSearch.has_path():
         setup(grid)
         print("Showing failed graph ({n_expanded} nodes) - enter to continue ")
         path, distance = anyaSearch.make_path(plot=True)

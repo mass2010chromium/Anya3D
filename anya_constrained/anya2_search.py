@@ -1,6 +1,6 @@
-from anya2_node import *
-from anya2_vis import *
-from utils import *
+from .anya2_node import *
+from .anya2_vis import *
+from .utils import *
 from typing import Set, Callable, Tuple, Dict
 
 from heapdict import heapdict
@@ -439,7 +439,7 @@ def expand_cone_vertical(node: Anya2Node, occupied: Set[GridPoint2D], atTarget: 
 #                    retval.append(corner_node)
 #                    cur = end
 #                    break
-            if atTarget(corner_node) or end != node.upper+1: # If cur == end, then we ran into a wall.
+            if atTarget(corner_node) or ((node.upper+1, nextGridRow) not in occupied): # If cur == end, then we ran into a wall.
                 retval.append(corner_node)
 
         elif toCorner and not fromCorner and iright < node.upper:
@@ -474,7 +474,7 @@ def expand_cone_vertical(node: Anya2Node, occupied: Set[GridPoint2D], atTarget: 
 #                    retval.append(corner_node)
 #                    cur = end
 #                    break
-            if atTarget(corner_node) or node.lower-1 != end: # If cur == end, then we ran into a wall.
+            if atTarget(corner_node) or ((node.lower-2, nextGridRow) not in occupied): # If cur == end, then we ran into a wall.
                 retval.append(corner_node)
 
         elif toCorner and not fromCorner and ileft > node.lower:
@@ -547,7 +547,7 @@ if __name__ == "__main__":
     grid = makeBorderedGrid((0, 0), (12, 12))
     occupied = grid.occupied
 
-    occupied.add((2, 7))
+    #occupied.add((2, 7))
     occupied.add((2, 6))
     occupied.add((2, 5))
     occupied.add((2, 4))
@@ -564,11 +564,12 @@ if __name__ == "__main__":
 
     occupied.add((8, 2))
     occupied.add((8, 3))
-    occupied.add((8, 4))
+    #occupied.add((8, 4))
     occupied.add((8, 5))
     occupied.add((8, 6))
     occupied.add((8, 7))
     #occupied.add((7, 7))
+    occupied.add((6, 8))
     occupied.add((6, 7))
     occupied.add((6, 6))
     #occupied.add((6, 5))
@@ -584,6 +585,8 @@ if __name__ == "__main__":
     anyaSearch.search_start(start, goal, grid, vis=True, sleep=0.025)
     #stime = time.time()
     #anyaSearch.search_start(start, goal, grid)
+    if anyaSearch.sleep:
+        input("Press enter to start...")
     n_expanded = 0
     terminate = False
     while not terminate:

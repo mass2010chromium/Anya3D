@@ -1,23 +1,16 @@
-from anya2_node import *
+from .anya_node import *
 from typing import Set
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 from collections import namedtuple
 
-def draw_node(node: Anya2Node, color: str = 'r'):
-    if node.orientation:
-        plt.plot((node.lower, node.upper), (node.ipos, node.ipos), 
-                 linestyle='-', color=color, linewidth=2, marker='.')
-        plt.plot((node.lower, node.root[0]), (node.ipos, node.root[1]), 
+def draw_node(node: AnyaNode, color: str = 'r'):
+    plt.plot((node.l, node.r), (node.row, node.row), 
+             linestyle='-', color=color, linewidth=2, marker='.')
+    if node.row != node.root[1]:
+        plt.plot((node.l, node.root[0]), (node.row, node.root[1]), 
                  linestyle='--', color=color, linewidth=1, marker='.')
-        plt.plot((node.upper, node.root[0]), (node.ipos, node.root[1]),
-                 linestyle='--', color=color, linewidth=1, marker='.')
-    else:
-        plt.plot((node.ipos, node.ipos), (node.lower, node.upper), 
-                 linestyle='-', color=color, linewidth=2, marker='.')
-        plt.plot((node.ipos, node.root[0]), (node.lower, node.root[1]), 
-                 linestyle='--', color=color, linewidth=1, marker='.')
-        plt.plot((node.ipos, node.root[0]), (node.upper, node.root[1]),
+        plt.plot((node.r, node.root[0]), (node.row, node.root[1]),
                  linestyle='--', color=color, linewidth=1, marker='.')
     plt.plot(*node.root, marker='o',color=color)
 
@@ -41,19 +34,18 @@ def show(interactive=False):
     if interactive:
         input("Press enter to continue...")
 
-def setup(grid: Grid):
+def setup(grid: Grid, fignum: int = 0):
     global _current_grid
-    plt.figure(0)
+    plt.figure(fignum)
     _current_grid = grid
 
 if __name__ == "__main__":
+    # grid = Grid(min=(-5, -5), max=(5, 5))
     grid = makeBorderedGrid((-5, -5), (5, 5))
+    node = AnyaNode((0, 0), 2, -3, 0)
     grid.occupied.update([(0, 0), (1, 1), (0, 1)])
     setup(grid)
 
     frame()
-    node = Anya2Node((0, 1), 2, -3, 0, True)
     draw_node(node)
-    node = node.reflect()
-    draw_node(node, color='g')
     show(interactive=True)
